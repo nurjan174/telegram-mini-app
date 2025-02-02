@@ -1,29 +1,32 @@
-// Инициализация Telegram Web App
 const tg = window.Telegram.WebApp;
 
-// Функция для отображения данных пользователя
-function displayUserProfile() {
-    const user = tg.initDataUnsafe.user;
+// Проверка доступности API
+if (!tg || !tg.initDataUnsafe) {
+    console.error("Telegram Web Apps API не подключен.");
+    return;
+}
 
-    if (user) {
-        // Фото профиля
-        const photoUrl = user.photo_url || 'https://via.placeholder.com/100';
-        document.getElementById('photo').src = photoUrl;
+const user = tg.initDataUnsafe.user;
 
-        // Имя
-        const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
-        document.getElementById('name').textContent = fullName;
+if (user) {
+    // Фото профиля (с заглушкой, если фото отсутствует)
+    const photoUrl = user.photo_url || 'https://via.placeholder.com/100';
+    document.getElementById('photo').src = photoUrl;
 
-        // ID
-        document.getElementById('id').textContent = user.id;
+    // Имя
+    const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    document.getElementById('name').textContent = fullName || "Не указано";
 
-        // Дата создания аккаунта
+    // ID
+    document.getElementById('id').textContent = user.id || "Недоступно";
+
+    // Дата создания аккаунта (если доступна)
+    if (user.created_at) {
         const createdDate = new Date(user.created_at * 1000).toLocaleDateString();
         document.getElementById('created').textContent = createdDate;
     } else {
-        document.getElementById('profile').innerHTML = '<p>Данные пользователя недоступны.</p>';
+        document.getElementById('created').textContent = "Недоступно";
     }
+} else {
+    document.getElementById('profile').innerHTML = '<p>Данные пользователя не получены.</p>';
 }
-
-// Вызываем функцию при загрузке страницы
-displayUserProfile();
