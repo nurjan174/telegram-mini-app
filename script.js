@@ -1,32 +1,57 @@
-const tg = window.Telegram.WebApp;
-
-// Проверка доступности API
-if (!tg || !tg.initDataUnsafe) {
-    console.error("Telegram Web Apps API не подключен.");
-    return;
-}
-
-const user = tg.initDataUnsafe.user;
-
-if (user) {
-    // Фото профиля (с заглушкой, если фото отсутствует)
-    const photoUrl = user.photo_url || 'https://via.placeholder.com/100';
-    document.getElementById('photo').src = photoUrl;
-
-    // Имя
-    const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
-    document.getElementById('name').textContent = fullName || "Не указано";
-
-    // ID
-    document.getElementById('id').textContent = user.id || "Недоступно";
-
-    // Дата создания аккаунта (если доступна)
-    if (user.created_at) {
-        const createdDate = new Date(user.created_at * 1000).toLocaleDateString();
-        document.getElementById('created').textContent = createdDate;
-    } else {
-        document.getElementById('created').textContent = "Недоступно";
-    }
-} else {
-    document.getElementById('profile').innerHTML = '<p>Данные пользователя не получены.</p>';
-}
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.MainButton.setText("Готово").hide();
+        
+        // Основные функции калькулятора
+        function appendToDisplay(value) {
+            const display = document.getElementById('display');
+            display.value += value;
+        }
+        
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+        
+        function backspace() {
+            const display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+        
+        function calculate() {
+            const display = document.getElementById('display');
+            try {
+                // Заменяем символ × на * для вычисления
+                const expression = display.value.replace(/×/g, '*');
+                const result = eval(expression);
+                display.value = result;
+                
+                // Можно отправить результат в Telegram
+                tg.sendData(JSON.stringify({
+                    action: 'calculation',
+                    expression: expression,
+                    result: result
+                }));
+            } catch (e) {
+                display.value = 'Ошибка';
+            }
+        }
+        
+        // Обработка нажатий клавиш
+        document.addEventListener('keydown', function(event) {
+            if (event.key >= '0' && event.key <= '9') {
+                appendToDisplay(event.key);
+            } else if (['+', '-', '*', '/', '(', ')', '.'].includes(event.key)) {
+                appendToDisplay(event.key);
+            } else if (event.key === 'Enter') {
+                calculate();
+            } else if (event.key === 'Backspace') {
+                backspace();
+            } else if (event.key === 'Escape') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
