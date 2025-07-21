@@ -1,32 +1,59 @@
-</style>
-</head>
-<body>
-    <div class="calculator">
-        <input type="text" class="display" id="display" readonly>
-        <div class="buttons">
-            <button class="clear" onclick="clearDisplay()">C</button>
-            <button onclick="appendToDisplay('(')">(</button>
-            <button onclick="appendToDisplay(')')">)</button>
-            <button class="operator" onclick="appendToDisplay('/')">/</button>
-            
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('*')">×</button>
-            
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
-            
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            
-            <button onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-            <button onclick="backspace()">⌫</button>
-            <button class="equals" onclick="calculate()">=</button>
-        </div>
-    </div>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#board {
+    display: inline-block;
+    border: 2px solid #333;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dark {
+    background-color: #769656;
+}
+
+.light {
+    background-color: #eeeed2;
+}
+
+.piece {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.white {
+    background-color: #fff;
+}
+
+.black {
+    background-color: #000;
+}
+
+.king {
+    border: 3px solid gold;
+}
+
+#status {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.highlight {
+    box-shadow: 0 0 10px 5px rgba(255, 215, 0, 0.7);
+}
